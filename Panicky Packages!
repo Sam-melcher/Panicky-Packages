@@ -1,0 +1,389 @@
+# Panicky Packages
+import random as rand
+
+gameLoop = True
+fuel = 100
+packages = 10
+distance = 0
+items = []
+allItems = ['Small Gas Can', 'Small Gas Can', 'Gas Can', 'Gas Can', 'Large Gas Can', 'Large Gas Can', 'Decoy Package',
+            'Decoy Package', 'Nitro', 'Large Nitro', 'Large Nitro', 'Magical Dice', 'Magical Dice', 'Extra Tire',
+            'Cables']
+allEvents = ['Nothing Happens', 'Nothing Happens', 'Nothing Happens', 'Nothing Happens', 'Gas Station Stop',
+             'Gas Station Stop', 'Presents', 'Presents', 'Nitro Shop', 'Nitro Shop', 'Shady Seller', 'Shady Seller',
+             'Package Factory', 'Package Factory', 'Detour', 'Detour', 'Flat Tire', 'Flat Tire', 'Tornado', 'Tornado',
+             'Wreck', 'Wreck', 'Bumpy Road', 'Bumpy Road', 'Time Machine']
+# thing
+while gameLoop:
+    mainMenuLoop = True
+    inventory = False
+    moveOn = False
+    if distance == 100 and fuel > 0 and packages > 1:
+        gameLoop = False
+        mainMenuLoop = False
+        print('You successfully delivered multiple packages! You win!')
+    elif distance == 100 and fuel > 0 and packages == 1:
+        gameLoop = False
+        mainMenuLoop = False
+        print('You successfully delivered a package! You win!')
+    elif fuel <= 0:
+        gameLoop = False
+        mainMenuLoop = False
+        print('You ran out of fuel! You lose!')
+    elif packages <= 0:
+        gameLoop = False
+        mainMenuLoop = False
+        print('You ran out of packages! You lose!')
+    # main menu
+    while mainMenuLoop:
+        print('------------------------------------------------')
+        print('Fuel Remaining: ' + str(fuel) + '/100%')
+        print('Packages Remaining: ' + str(packages) + '/10')
+        print('------------------------------------------------')
+        print('Distance Traveled: ' + str(distance) + '/100%')
+        print('------------------------------------------------')
+        print('(1) Check Inventory')
+        print('(2) Move On')
+        print('(3) Leave Early')
+        choice = input('Enter your choice: ')
+        if choice == "1":
+            inventory = True
+            mainMenuLoop = False
+        elif choice == "2":
+            moveOn = True
+            mainMenuLoop = False
+        elif choice == "3":
+            gameLoop = False
+            mainMenuLoop = False
+    # items
+    if inventory:
+        inventoryLoop = True
+        while inventoryLoop:
+            print('------------------------------------------------')
+            for item in items:
+                if item == "Small Gas Can":
+                    print('Small Gas Can ~ +20% Fuel')
+                if item == "Gas Can":
+                    print('Gas Can ~ +40% Fuel')
+                if item == "Large Gas Can":
+                    print('Large Gas Can ~ +60% Fuel')
+                if item == "Decoy Package":
+                    print('Decoy Package ~ +1 Package')
+                if item == "Nitro":
+                    print('Nitro ~ +5% Distance & -15% Fuel')
+                if item == "Large Nitro":
+                    print('Large Nitro ~ +15% Distance & -35% Fuel')
+                if item == "Magical Dice":
+                    print('Magical Dice ~ +10% Distance/-10% Distance/+10% Fuel/-10% Fuel/+1 Package/-1 Package')
+                if item == "Extra Tire":
+                    print('Extra Tire ~ May Be Useful Later...')
+                if item == "Cables":
+                    print('Cables ~ May Be Useful Later...')
+            print('------------------------------------------------')
+            print('(1) Use An Item')
+            print('(2) Go Back')
+            choice = input('Enter your choice: ')
+            if choice == "1":
+                itemChoice = input("Enter the item's name: ")
+                notFound = True
+                unusableItem = False
+                for item in items:
+                    if itemChoice == item:
+                        if notFound:
+                            if item == "Small Gas Can":
+                                fuel += 20
+                                if fuel >= 100:
+                                    fuel = 100
+                                notFound = False
+                                items.remove(item)
+                            if item == "Gas Can":
+                                fuel += 40
+                                if fuel >= 100:
+                                    fuel = 100
+                                notFound = False
+                                items.remove(item)
+                            if item == "Large Gas Can":
+                                fuel += 60
+                                if fuel >= 100:
+                                    fuel = 100
+                                notFound = False
+                                items.remove(item)
+                            if item == "Decoy Package":
+                                packages += 1
+                                if packages >= 10:
+                                    fuel = 10
+                                notFound = False
+                                items.remove(item)
+                            if item == "Nitro":
+                                fuel -= 15
+                                distance += 5
+                                if fuel <= 0:
+                                    fuel = 0
+                                if distance >= 100:
+                                    distance = 100
+                                notFound = False
+                                items.remove(item)
+                            if item == "Large Nitro":
+                                fuel -= 35
+                                distance += 15
+                                if fuel <= 0:
+                                    fuel = 0
+                                if distance >= 100:
+                                    distance = 100
+                                notFound = False
+                                items.remove(item)
+                            if item == "Magical Dice":
+                                diceChoice = rand.randint(1, 6)
+                                if diceChoice == 1:
+                                    print('-10% Fuel!')
+                                    fuel -= 10
+                                    if fuel <= 0:
+                                        fuel = 0
+                                elif diceChoice == 2:
+                                    print('+10% Fuel!')
+                                    fuel += 10
+                                    if fuel >= 100:
+                                        fuel = 100
+                                elif diceChoice == 3:
+                                    print('+10% Distance!')
+                                    distance += 10
+                                    if distance >= 100:
+                                        distance = 100
+                                elif diceChoice == 4:
+                                    print('-10% Distance!')
+                                    distance -= 10
+                                    if distance <= 0:
+                                        distance = 0
+                                elif diceChoice == 5:
+                                    print('-1 Package!')
+                                    packages -= 1
+                                    if packages <= 0:
+                                        packages = 0
+                                elif diceChoice == 6:
+                                    print('+1 Package!')
+                                    packages += 1
+                                    if packages > 10:
+                                        packages = 10
+                                notFound = False
+                                items.remove(item)
+                            if item == "Extra Tire":
+                                unusableItem = True
+                                notFound = False
+                            if item == "Cables":
+                                unusableItem = True
+                                notFound = False
+                if notFound:
+                    print('That item could not be found.')
+                else:
+                    if unusableItem:
+                        print('You cannot use ' + itemChoice + ' right now.')
+                    else:
+                        print('Successfully used ' + itemChoice + '.')
+            elif choice == "2":
+                inventoryLoop = False
+    # continuing
+    if moveOn:
+        print('------------------------------------------------')
+        fuelChange = rand.randint(5, 10)
+        distanceChange = rand.randint(3, 6)
+        fuel -= fuelChange
+        distance += distanceChange
+        if distance > 100:
+            distance = 100
+        if fuel < 0:
+            fuel = 0
+        print('-' + str(fuelChange) + '% Fuel')
+        print('+' + str(distanceChange) + '% Distance Traveled')
+        print('------------------------------------------------')
+        print('Fuel Remaining: ' + str(fuel) + '/100%')
+        print('Packages Remaining: ' + str(packages) + '/10')
+        print('------------------------------------------------')
+        print('Distance Traveled: ' + str(distance) + '/100%')
+        print('------------------------------------------------')
+        if distance == 100 and fuel > 0 and packages > 1:
+            gameLoop = False
+            print('You successfully delivered multiple packages! You win!')
+        elif distance == 100 and fuel > 0 and packages == 1:
+            gameLoop = False
+            print('You successfully delivered a package! You win!')
+        elif fuel <= 0:
+            gameLoop = False
+            print('You ran out of fuel! You lose!')
+        # event loop
+        if gameLoop:
+            event = rand.choice(allEvents)
+            print(event)
+            if event == "Nothing Happens":
+                print('You simply traveled farther without anything happening.')
+            if event == "Gas Station Stop":
+                gasCans = ['Small Gas Can', 'Gas Can', 'Large Gas Can']
+                gasCan = rand.choice(gasCans)
+                print('You stopped at a gas station and got +20% fuel and a ' + gasCan + '.')
+                items.append(gasCan)
+                fuel += 20
+                if fuel > 100:
+                    fuel = 100
+            if event == "Presents":
+                print('You found a red and blue present on the road. Which one will you take?')
+                print('(1) Open The Red Present')
+                print('(2) Open The Blue Present')
+                presentLoop = True
+                while presentLoop:
+                    presentChoice = input('Enter your choice: ')
+                    if presentChoice == "1" or presentChoice == "2":
+                        presentLoop = False
+                        present = rand.randint(1, 2)
+                        if present == 1:
+                            item = rand.choice(allItems)
+                            print('The present had a ' + item + ' inside!')
+                            items.append(item)
+                        elif present == 2:
+                            gainedFuel = rand.randint(25, 35)
+                            print('The present had ' + str(gainedFuel) + ' fuel inside!')
+                            fuel += gainedFuel
+                            if fuel > 100:
+                                fuel = 100
+            if event == "Nitro Shop":
+                nitros = ['Nitro', 'Large Nitro']
+                nitro = rand.choice(nitros)
+                print('You stopped at a nitro shop and got a ' + nitro + '.')
+                items.append(nitro)
+            if event == "Shady Seller":
+                print('You found a suspicious-looking seller that gave you Magical Dice.')
+                items.append('Magical Dice')
+            if event == "Package Factory":
+                factory = rand.randint(1, 2)
+                if factory == 1:
+                    print('You found a package factory and got a Decoy Package.')
+                    items.append('Decoy Package')
+                else:
+                    print('You found a package factory and got a package and a Decoy Package.')
+                    items.append('Decoy Package')
+                    packages += 1
+                    if packages > 10:
+                        packages = 10
+            if event == "Detour":
+                print('You found an alternative route with items at the end. Do you want to go down that path?')
+                print('(1) Go Down The Path (-20 Fuel & +2 Items)')
+                print('(2) Keep Moving Forward')
+                pathLoop = True
+                while pathLoop:
+                    pathChoice = input('Enter your choice: ')
+                    if pathChoice == "1":
+                        pathLoop = False
+                        item = rand.choice(allItems)
+                        print('+1 ' + item)
+                        items.append(item)
+                        item = rand.choice(allItems)
+                        print('+1 ' + item)
+                        items.append(item)
+                        fuel -= 20
+                        if fuel < 0:
+                            fuel = 0
+                    elif pathChoice == "2":
+                        pathLoop = False
+            if event == "Flat Tire":
+                found = False
+                for item in items:
+                    if item == "Extra Tire":
+                        found = True
+                        items.remove(item)
+                if found:
+                    print('You had a flat tire, but you had an Extra Tire to spare.')
+                else:
+                    print('You had a flat tire and the mechanic stole a package while giving you another tire.')
+                    packages -= 1
+                    if packages < 0:
+                        packages = 0
+            if event == "Tornado":
+                found = False
+                for item in items:
+                    if item == "Cables":
+                        found = True
+                        items.remove(item)
+                if found:
+                    print('You encountered a tornado, and your Cables got destroyed while holding down your packages.')
+                else:
+                    print('You encountered a tornado and two packages flew out.')
+                    packages -= 2
+                    if packages < 0:
+                        packages = 0
+            if event == "Wreck":
+                found = False
+                for item in items:
+                    if item == "Cables":
+                        found = True
+                        items.remove(item)
+                if found:
+                    print('You got into a wreck, and your Cables got destroyed while holding down your packages.')
+                else:
+                    print('You got into a wreck and two packages flew out.')
+                    packages -= 2
+                    if packages < 0:
+                        packages = 0
+            if event == "Bumpy Road":
+                found = False
+                for item in items:
+                    if item == "Cables":
+                        found = True
+                        items.remove(item)
+                if found:
+                    print('You went on a bumpy road, and your Cables got destroyed while holding down your packages.')
+                else:
+                    print('You went on a bumpy road and a package flew out.')
+                    packages -= 1
+                    if packages < 0:
+                        packages = 0
+            if event == "Time Machine":
+                print(
+                    'You found a time machine that restarts your journey but lets you keep your items. Do you use it?')
+                print('(1) Use The Time Machine (Restart But With Your Items)')
+                print('(2) Keep Moving Foward')
+                pathLoop = True
+                while pathLoop:
+                    pathChoice = input('Enter your choice: ')
+                    if pathChoice == "1":
+                        pathLoop = False
+                        fuel = 100
+                        packages = 10
+                        distance = 0
+                    elif pathChoice == "2":
+                        pathLoop = False
+print('------------------------------------------------')
+print('The game is over. Do you want to show your final stats & inventory?')
+print('(1) Yes')
+print('(2) No')
+endLoop = True
+while endLoop:
+    end = input('Enter your choice: ')
+    if end == "1":
+        endLoop = False
+        print('------------------------------------------------')
+        print('Fuel Remaining: ' + str(fuel) + '/100%')
+        print('Packages Remaining: ' + str(packages) + '/10')
+        print('------------------------------------------------')
+        print('Distance Traveled: ' + str(distance) + '/100%')
+        print('------------------------------------------------')
+        for item in items:
+            if item == "Small Gas Can":
+                print('Small Gas Can')
+            if item == "Gas Can":
+                print('Gas Can')
+            if item == "Large Gas Can":
+                print('Large Gas Can')
+            if item == "Decoy Package":
+                print('Decoy Package')
+            if item == "Nitro":
+                print('Nitro')
+            if item == "Large Nitro":
+                print('Large Nitro')
+            if item == "Magical Dice":
+                print('Magical Dice')
+            if item == "Extra Tire":
+                print('Extra Tire')
+            if item == "Cables":
+                print('Cables')
+        print('------------------------------------------------')
+    elif end == "2":
+        endLoop = False
+print('Goodbye!')
